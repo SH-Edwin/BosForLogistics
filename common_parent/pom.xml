@@ -9,7 +9,7 @@
   
  <properties>
 		<spring.version>4.1.7.RELEASE</spring.version>
-		<struts2.version>2.3.24</struts2.version>
+		<struts2.version>2.3.35</struts2.version>
 		<hibernate.version>5.0.1.Final</hibernate.version>
 		<slf4j.version>1.6.6</slf4j.version>
 		<springdataredis.version>1.4.1.RELEASE</springdataredis.version>
@@ -33,6 +33,7 @@
 		</dependency>
 
 		<!-- spring 框架 -->
+		<!-- IOC 导入 context 依赖 beans、core、expression  -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -45,12 +46,14 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!-- Web 集成 配置监听器  -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
+		
+		<!-- 整合持久层框架 hibernate、jpa -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -62,13 +65,15 @@
 			<artifactId>spring-jms</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
+		
+		<!-- 测试集成 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 		
+		<!-- AOP 导入 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
@@ -90,22 +95,25 @@
 		</dependency>
 
 		<!-- struts2 框架 -->
+		<!-- 	struts2 基本开发核心包 -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>${struts2.version}</version>
 		</dependency>
+		<!-- Struts2 和 spring 整合 -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-spring-plugin</artifactId>
 			<version>${struts2.version}</version>
 		</dependency>
+		<!-- Struts2 注解开发  -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-convention-plugin</artifactId>
 			<version>${struts2.version}</version>
 		</dependency>
-		
+		<!-- Struts2 json支持  -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-json-plugin</artifactId>
@@ -239,7 +247,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.1.37</version>
+			<version>1.2.31 </version>
 		</dependency>
 
 		<dependency>
@@ -258,8 +266,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.2</version>
 					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 						<encoding>UTF-8</encoding>
 						<showWarnings>true</showWarnings>
 					</configuration>

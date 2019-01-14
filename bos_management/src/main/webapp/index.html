@@ -5,31 +5,61 @@
 		<title>BOS管理系统 首页</title>
 		<link href="favicon.ico" rel="icon" type="image/x-icon" />
 		<!-- 导入jquery核心类库 -->
-		<script type="text/javascript" src="./js/jquery-1.8.3.js"></script>
-		<!-- 导入easyui类库 -->
-		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="./js/easyui/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="./js/easyui/themes/icon.css">
+		<script src="./js/jquery-1.8.3.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" type="text/css" href="./css/default.css">
-		<script type="text/javascript" src="./js/easyui/jquery.easyui.min.js"></script>
+		<!-- 导入easyui类库 -->
+		<script src="./js/easyui/jquery.easyui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="./js/easyui/themes/icon.css"/>
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="./js/easyui/themes/default/easyui.css"/>
 		<!-- 导入ztree类库 -->
-		<link rel="stylesheet" href="./js/ztree/zTreeStyle.css" type="text/css" />
-		<script src="./js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
-		<script src="./js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<script src="./js/ztree/jquery.ztree.all.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="./js/ztree/css/metroStyle/metroStyle.css"/>
+		
+		<!--JS函数-->
 		<script type="text/javascript">
 			$(function() {
-				/** 
-				   Ztree菜单通用配置 
-				*/
+			//zTree
+				// 1、 进行ztree菜单设置
 				var setting = {
+					//支持简单json数据格式
 					data : {
-						simpleData : { // 简单数据 
+						simpleData : { 
 							enable : true
 						}
 					},
+					//点击后整合选项卡
 					callback : {
-						onClick : onClick
+						onClick:function(event, treeId, treeNode, clickFlag) {
+							// 判断树菜单节点是否含有 page属性
+						if (treeNode.page!=undefined && treeNode.page!= "") {
+							if ($("#tabs").tabs('exists', treeNode.name)) {// 判断tab是否存在
+								$('#tabs').tabs('select', treeNode.name); // 切换tab
+							} else {
+								// 如果没有打开,开启一个新的tab页面
+								var content = '<div style="width:100%;height:100%;overflow:hidden;">'
+										+ '<iframe src="'
+										+ treeNode.page
+										+ '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
+				
+								$('#tabs').tabs('add', {
+									title : treeNode.name,
+									content : content,
+									closable : true,
+									tools:[{ 
+										iconCls:'icon-reload', // 刷新按钮
+										handler : function(){
+											var tab = $('#tabs').tabs('getTab',treeNode.name);
+											$("iframe[src='"+treeNode.page+"']").get(0).contentWindow.location.reload(true);
+										}
+									}] 
+								});
+							}
+						}
+						}
 					}
 				};
+				
 				
 				// 基本功能菜单加载
 				$.post("./data/menu.json",function(data){
@@ -97,33 +127,7 @@
 				}); 
 			});
 			
-			function onClick(event, treeId, treeNode, clickFlag) {
-				// 判断树菜单节点是否含有 page属性
-				if (treeNode.page!=undefined && treeNode.page!= "") {
-					if ($("#tabs").tabs('exists', treeNode.name)) {// 判断tab是否存在
-						$('#tabs').tabs('select', treeNode.name); // 切换tab
-					} else {
-						// 开启一个新的tab页面
-						var content = '<div style="width:100%;height:100%;overflow:hidden;">'
-								+ '<iframe src="'
-								+ treeNode.page
-								+ '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
-		
-						$('#tabs').tabs('add', {
-							title : treeNode.name,
-							content : content,
-							closable : true,
-							tools:[{ 
-								iconCls:'icon-reload', // 刷新按钮
-								handler : function(){
-									var tab = $('#tabs').tabs('getTab',treeNode.name);
-									$("iframe[src='"+treeNode.page+"']").get(0).contentWindow.location.reload(true);
-								}
-							}] 
-						});
-					}
-				}
-			}
+			
 		
 			/*******顶部特效 *******/
 			/**
@@ -134,8 +138,7 @@
 			changeTheme = function(themeName) {
 				var $easyuiTheme = $('#easyuiTheme');
 				var url = $easyuiTheme.attr('href');
-				var href = url.substring(0, url.indexOf('themes')) + 'themes/'
-						+ themeName + '/easyui.css';
+				var href = url.substring(0, url.indexOf('themes')) + 'themes/'+ themeName + '/easyui.css';
 				$easyuiTheme.attr('href', href);
 				var $iframe = $('iframe');
 				if ($iframe.length > 0) {
@@ -178,11 +181,14 @@
 				<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">控制面板</a>
 			</div>
 			<div id="layout_north_pfMenu" style="width: 120px; display: none;">
-				<div onclick="changeTheme('default');">default</div>
-				<div onclick="changeTheme('gray');">gray</div>
 				<div onclick="changeTheme('black');">black</div>
 				<div onclick="changeTheme('bootstrap');">bootstrap</div>
+				<div onclick="changeTheme('default');">default</div>
+				<div onclick="changeTheme('gray');">gray</div>
+				<div onclick="changeTheme('material');">material</div>
+				<div onclick="changeTheme('material-teal');">material-teal</div>
 				<div onclick="changeTheme('metro');">metro</div>
+				
 			</div>
 			<div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
 				<div onclick="editPassword();">修改密码</div>
@@ -250,13 +256,15 @@
 				</div>
 			</div>
 		</div>
-
+		
+		<!-- 菜单 初始化都是隐藏的-->
 		<div id="mm" class="easyui-menu" style="width:120px;">
 			<div data-options="name:'Close'">关闭当前窗口</div>
 			<div data-options="name:'CloseOthers'">关闭其它窗口</div>
 			<div class="menu-sep"></div>
 			<div data-options="iconCls:'icon-cancel',name:'CloseAll'">关闭全部窗口</div>
 		</div>
+		
 
 	</body>
 

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="UTF-8">
 		<title>取派标准</title>
@@ -30,6 +29,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
+					//从远程站点请求数据的 URL
 					url : "../../standard_pageQuery.action",
 					idField : 'id',
 					columns : columns
@@ -47,7 +47,7 @@
 				});
 			});	
 			
-			//工具栏
+			//收派标准信息表格的工具栏
 			var toolbar = [ {
 				id : 'button-add',
 				text : '增加',
@@ -76,7 +76,7 @@
 				}
 			} ];
 			
-			// 定义列
+			// 定义收派标准信息表格的列
 			var columns = [ [ {
 				field : 'id',
 				checkbox : true
@@ -126,9 +126,18 @@
 
 	<body class="easyui-layout" style="visibility:hidden;">
 		<div region="center" border="false">
+			<!--
+            	作者：sh_edwin@163.com
+            	时间：2019-01-12
+            	描述：展示standard的数据网格
+            -->
 			<table id="grid"></table>
 		</div>
-		
+		<!--
+        	作者：sh_edwin@163.com
+        	时间：2019-01-12
+        	描述：添加修改窗口
+        -->
 		<div class="easyui-window" title="对收派标准进行添加或者修改" id="standardWindow" collapsible="false" minimizable="false" maximizable="false" modal="true" closed="true" style="width:600px;top:50px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">

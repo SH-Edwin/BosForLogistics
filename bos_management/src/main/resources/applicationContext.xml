@@ -32,20 +32,28 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="cn.itcast.bos.domain" />
+		<!-- 持久化提供者,配置为hibernate -->
 		<property name="persistenceProvider">
 			<bean class="org.hibernate.jpa.HibernatePersistenceProvider" />
 		</property>
+		<!-- 适配器,相当于hibernate的配置 -->
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<!-- 自动生成表 -->
 				<property name="generateDdl" value="true" />
+				<!-- 使用的数据库 -->
 				<property name="database" value="ORACLE" />
+				<!-- 使用的数据库平台,相当于hibernate方言 -->
 				<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+				<!-- 展示sql语句 -->
 				<property name="showSql" value="true" />
 			</bean>
 		</property>
+		<!-- JPA方言配置 -->
 		<property name="jpaDialect">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
 		</property>
+		<!-- 其他可选配置 -->
 		<property name="jpaPropertyMap">
 			<map>
 				<entry key="hibernate.query.substitutions" value="true 1, false 0" />
