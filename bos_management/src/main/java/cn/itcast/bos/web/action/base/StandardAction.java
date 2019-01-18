@@ -50,15 +50,14 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
 	@Autowired
 	private StandardService standardService;
 	
-	//查询页面数据
-	
+	//查询标准数据页面
 	@Action(value = "standard_pageQuery", results = {@Result(name = "success", type = "json")})
 	public String pageQuery() {
 		//创建PageRequest对象(页码从0开始计数),需要传给dao查询当前页面信息
 		Pageable pageRequest=new PageRequest(page-1, rows);
 		Page<Standard> page=standardService.findPageData(pageRequest);
 		//需要返回total总记录数,rows数据内容封装成json传到前端
-		int total = page.getTotalPages();
+		int total = (int) page.getTotalElements();
 		List<Standard> rows = page.getContent();
 		Map<String, Object> resultMap=new HashMap<>();
 		resultMap.put("total", total);
@@ -75,5 +74,14 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
 		standardService.save(standard);
 		return SUCCESS;
 	}
+	
+	//得到全部标准
+	@Action(value="standard_findall", results= {@Result(name="success", type="json")})
+	public String findAll() {
+		List<Standard> standards=standardService.findAll();
+		ActionContext.getContext().getValueStack().push(standards);
+		return SUCCESS;
+	}
+	
 
 }

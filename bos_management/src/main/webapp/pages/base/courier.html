@@ -16,6 +16,27 @@
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript">
+			//将表单序列化为json对象
+			$.fn.serializeJson=function(){  
+            var serializeObj={};  
+            var array=this.serializeArray();  
+            var str=this.serialize();  
+            $(array).each(function(){  
+                if(serializeObj[this.name]){  
+                    if($.isArray(serializeObj[this.name])){  
+                        serializeObj[this.name].push(this.value);  
+                    }else{  
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+                    }  
+                }else{  
+                    serializeObj[this.name]=this.value;   
+                }  
+            });  
+            return serializeObj;  
+        }; 
+			
+			
+			//工具栏按钮触发方法
 			function doAdd(){
 				$('#addWindow').window("open");
 			}
@@ -25,13 +46,43 @@
 			}
 			
 			function doDelete(){
-				alert("删除...");
+				//获得选中的内容,将ids发送给action
+				var rows = $("#grid").datagrid('getSelections');
+				if (rows.length == 0) {
+					$.messager.alert("警告","您还没有选中任何需要作废的派送员!","warning");
+				}else{
+					//id数组
+					var array=new Array();
+					for (var i = 0; i < rows.length; i++) {
+						array.push(rows[i].id);
+					}
+					//转换为字符串发送给服务端
+					var ids=array.join(",");
+					window.location.href="../../courier_delBatch.action?ids="+ids;
+				}
 			}
 			
 			function doRestore(){
-				alert("将取派员还原...");
+				//获得选中的内容,将ids发送给action
+				var rows = $("#grid").datagrid('getSelections');
+				if (rows.length == 0) {
+					$.messager.alert("警告","您还没有选中任何需要还原的派送员!","warning");
+				}else{
+					//id数组
+					var array=new Array();
+					for (var i = 0; i < rows.length; i++) {
+						array.push(rows[i].id);
+					}
+					//转换为字符串发送给服务端
+					var ids=array.join(",");
+					window.location.href="../../courier_restoreBatch.action?ids="+ids;
+				}
 			}
-			//工具栏
+			
+			function doSearch(){
+				$('#searchWindow').window('open');
+			}
+			//取派员信息表的工具栏
 			var toolbar = [ {
 				id : 'button-add',	
 				text : '增加',
@@ -52,8 +103,13 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
+			},{
+				id : 'button-search',
+				text : '搜索',
+				iconCls: 'icon-search',
+				handler : doSearch
 			}];
-			// 定义列
+			// 定义取派员信息表的列
 			var columns = [ [ {
 				field : 'id',
 				checkbox : true,
@@ -109,8 +165,8 @@
 				width : 80,
 				align : 'center',
 				formatter : function(data,row, index){
-					if(data=="0"){
-						return "正常使用"
+					if(data==null){
+						return "正常"
 					}else{
 						return "已作废";
 					}
@@ -127,6 +183,7 @@
 				align : 'center'
 			} ] ];
 			
+			//初始化事件
 			$(function(){
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
@@ -141,7 +198,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/courier.json",
+					url : "../../courier_pageQuery.action",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -157,19 +214,48 @@
 			        height: 400,
 			        resizable:false
 			    });
-				
+			    
+			    //收派员添加或修改窗口点击保存
+			    $("#save").click(function(){
+			    	if ($("#courierForm").form('validate')) {
+			    		$("#courierForm").submit();
+			    	} else{
+			    		$.messager.alert("警告","表单中还存在一些非法内容","waring");
+			    	}
+			    })
+			    
+				//查询按钮,将表单内容转化为json
+				$("#searchBtn").click(function(){
+					//将表单内容转化为json对象
+					var params=$("#searchForm").serializeJson();
+					//将json对象绑定在datagrid上,完成带条件查询
+					$("#grid").datagrid('load',params);
+					$('#searchWindow').window('close');
+				})
 			});
 		
 			function doDblClickRow(){
 				alert("双击表格数据...");
 			}
+			
+			
+			
+			
+			
 		</script>
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
+		<!--
+        	描述：收派员信息表格
+        -->
 		<div region="center" border="false">
 			<table id="grid"></table>
 		</div>
+		
+		<!--
+        	描述：收派员添加修改窗口
+        -->
 		<div class="easyui-window" title="对收派员进行添加或者修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
@@ -178,7 +264,7 @@
 			</div>
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
-				<form>
+				<form id="courierForm" action="../../courier_save.action" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="4">收派员信息</td>
@@ -220,7 +306,8 @@
 							</td>
 							<td>取派标准</td>
 							<td>
-								<input type="text" name="standard.id" class="easyui-validatebox" required="true"/>
+								<input type="text" name="standard.id" class="easyui-combobox" data-options="required:true,
+									valueField:'id',textField:'name',url:'../../standard_findall.action',editable:false"/>
 							</td>
 						</tr>
 						<tr>

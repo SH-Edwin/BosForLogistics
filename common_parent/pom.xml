@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>${poi.version}</version>
+			<version>3.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -254,6 +254,13 @@
 			<groupId>com.colobu</groupId>
 			<artifactId>fastjson-jaxrs-json-provider</artifactId>
 			<version>0.3.1</version>
+		</dependency>
+		
+		<!-- 中文转为拼音 工具包 -->
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.0</version>
 		</dependency>
 	</dependencies>
 
