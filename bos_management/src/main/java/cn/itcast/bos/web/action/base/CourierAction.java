@@ -141,5 +141,12 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
 		return SUCCESS;
 	}
 	
+	//得到所有未关联的快递员
+	@Action(value="courier_findNoAssociation", results= {@Result(name="success",type="json")})
+	public String findNoAssociation() {
+		List<Courier> list = courierService.findNoAssociation();
+		ActionContext.getContext().getValueStack().push(list);
+		return SUCCESS;
+	}
 	
 }

@@ -1,5 +1,7 @@
 package cn.itcast.bos.service.base;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,6 +17,8 @@ public interface CourierService {
 	void delBatch(String[] idStrings);
 
 	void restoreBatch(String[] idStrings);
+
+	List<Courier> findNoAssociation();
 
 	
 
