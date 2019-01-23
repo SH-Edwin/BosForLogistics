@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.struts2.json.annotations.JSON;
+import org.springframework.data.annotation.Transient;
 
 
 /**
@@ -37,7 +38,12 @@ public class Area {
 
 	@OneToMany(mappedBy = "area")
 	private Set<SubArea> subareas = new HashSet<SubArea>();
-
+	
+	@Transient
+	public String getName() {
+		return province+","+city+","+district;
+	}
+	
 	public String getId() {
 		return id;
 	}

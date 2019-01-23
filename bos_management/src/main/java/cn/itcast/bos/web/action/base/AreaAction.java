@@ -185,9 +185,15 @@ public class AreaAction extends ActionSupport implements ModelDriven<Area>{
 		}
 		//调用业务层将集合存入数据库
 		areaService.saveBatch(areas);
-		
 		ServletActionContext.getResponse().getWriter().print("1");
 	}
 	
+	//显示所有区域
+	@Action(value="area_findAll" , results= {@Result(name="success", type="json")})
+	public String findAll() {
+		List<Area> list = areaService.findAll();
+		ActionContext.getContext().getValueStack().push(list);
+		return SUCCESS;
+	}
 	
 }

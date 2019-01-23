@@ -18,4 +18,8 @@ public interface AreaService {
 
 	Page<Area> pageQuery(Specification<Area> specification, Pageable pageable);
 
+	List<Area> findAll();
+
+	Area findById(String id);
+
 }
