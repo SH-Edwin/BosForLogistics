@@ -11,6 +11,8 @@
 		<script  type="text/javascript" src="js/jquery.min.js"></script>
 		<script  type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script  type="text/javascript" src="js/self/effect.js"></script>
+		<script  type="text/javascript" src="js/angular.min.js" ></script>
+		
 
 		<!--[if IE]>
     <script  type="text/javascript" src="js/html5.js"></script>
@@ -38,29 +40,34 @@
 								
 			</div>
 			
-            <div class="signup">
+            <div class="signup" ng-app="signupApp" ng-controller="signupCtrl">
               <div class="col-md-9 signupbox">
-				<form class="form col-md-6">
+				<form id="registForm" action="customer_regist.action" method="post" class="form col-md-6">
 					<div class=" form-group">
 							<label for="inputaccount" class="col-sm-3 control-label"><b>*</b>手机号</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="inputaccount" placeholder="请输入手机号">
+								<input type="text" name="telephone" class="form-control" id="inputaccount" placeholder="请输入手机号" ng-model="telephone">
 							</div>
 					</div>
 					<div class="form-group">
 							<label for="inputaccount" class="col-sm-3 control-label"><b>*</b>验证码</label>
 							<div class="col-sm-5">
-								<input type="text" class="form-control" id="inputaccount" placeholder="请输入验证码">
+								<input type="text" name="checkCode" class="form-control" id="inputaccount" placeholder="请输入验证码">
 							</div>
 							<div class="col-sm-3 song">
-								<button class="btn btn-default">获取验证码</button>
+								<!--
+                                	作者：sh_edwin@163.com
+                                	时间：2019-01-25
+                                	描述：发送验证码
+                                -->
+								<a id="sendCheck" class="btn btn-default" ng-click="getCheckCode(telephone)" ng-bind="btnMsg"></a>
 							</div>
 							
 					</div>
 					<div class="form-group">
 							<label for="inputaccount" class="col-sm-3 control-label"><b>*</b>密码</label>
 							<div class="col-sm-8">
-								<input type="password" class="form-control" id="inputaccount" placeholder="6-16位数字或英文字母">
+								<input type="password" name="password" class="form-control" id="inputaccount" placeholder="6-16位数字或英文字母" ng-model="p1">
 								<p class="text-right grey">安全强度：*****</p>
 							</div>
 							
@@ -69,38 +76,35 @@
 					<div class="form-group">
 							<label for="inputaccount" class="col-sm-3 control-label"><b>*</b>确认密码</label>
 							<div class="col-sm-8">
-								<input type="password" class="form-control" id="inputaccount" placeholder="6-16位数字或英文字母">
+								<input type="password" class="form-control" id="inputaccount" placeholder="6-16位数字或英文字母"
+									 ng-model="p2" ng-blur="checkPw()">
+								<p id="pwMsg" class="text-right grey" style="color: red;" ng-bind="pwMsg"></p>
 							</div>
+							
 					</div>
 					<div class="form-group">
 							<label for="inputaccount" class="col-sm-3 control-label"><b>*</b>绑定邮箱</label>
 							<div class="col-sm-8">
-								<input type="email" class="form-control" id="inputemail" placeholder="请输入需要绑定的邮箱">
+								<input type="email" name="email" class="form-control" id="inputemail" placeholder="请输入需要绑定的邮箱">
 							</div>
 					</div>
 					<div class="form-group">							
 							<div class="col-sm-offset-3 col-sm-8 song">
 								<div class="checkbox">
-    <label>
-      <input type="checkbox"> 查看并同意<a href="#"> 《速运快递服务协议》</a>
-    </label>
-  </div>
-								
+							    <label>
+							      <input type="checkbox"> 查看并同意<a href="#"> 《速运快递服务协议》</a>
+							    </label>
+							  </div>
 							</div>
 					</div>
 					<div class="form-group signbtn">							
 							<div class="col-sm-offset-3 col-sm-8 song">
-								<a class="btn btn-danger" href="signup-success.html">注册</a>
+								<a class="btn btn-danger" href="javascript:$('#registForm').submit()" >注册</a>
 							</div>
 					</div>
-					
-					
 				</form>
-				
-				
-				
-			</div>
-		      <div class="col-md-3 introbox">
+				</div>
+		     	 <div class="col-md-3 introbox">
 		      	<div class="signintro">
 		      	<h5 class="redtext">注册成为速运会员，您可以享受更多的服务！</h5>
 		      	<ul>
@@ -111,9 +115,8 @@
 		      		
 		      	</ul>
 		      	</div>
-		      	
-		      </div>
-		</div>
+		      	</div>
+			</div>
 		</section>
 		
 		</div>
@@ -127,5 +130,75 @@
 				</div>
 			</section>
 		</footer>
+		
+		<!--
+        	作者：sh_edwin@163.com
+        	时间：2019-01-25
+        	描述：AngularJS
+        -->
+		<script type="text/javascript">
+			//定义模块
+			var signupApp = angular.module("signupApp",[]);
+			//定义控制器
+			signupApp.controller("signupCtrl", ["$scope","$http",function($scope,$http){
+				//密码重复校验
+				$scope.pwMsg="";
+				$scope.checkPw=function(){
+					$scope.pwMsg="";
+					if ($scope.p1 != $scope.p2) {
+					$scope.pwMsg="两次输入密码不一致";
+					}
+				};
+				
+				//发送短信验证码
+				$scope.btnMsg="获取验证码";
+				var second=5;
+				var secondInterval;
+				$scope.getCheckCode=function(telephone){
+					//校验手机号
+					var regex = /^1\d{10}$/;
+					if (regex.test(telephone)) {
+						//发送请求到服务端发送短信验证码给用户
+						$http({
+							method:'GET',
+							url:'customer_sendSms.action',
+							params:{
+								telephone:telephone
+							}
+						}).error(function(data,status,headers,config){
+								alert("发送短信出错");
+							});
+					}else{
+						alert("手机号格式非法,请输入正确的手机号");
+						return;
+					}
+					//按钮开始倒计时,期间按钮无效
+					$("#sendCheck").attr("disabled",true);
+					secondInterval=setInterval(function(){
+						if (second<0) {
+							//倒计时结束,可以重新发送
+							$scope.btnMsg="获取验证码";
+							$("#sendCheck").attr("disabled",false);
+							second=5;
+							clearInterval(secondInterval);
+							secondInterval=undefined;
+							//强制更新视图
+							$scope.$digest();
+						} else{
+							//倒计时没结束,继续倒计时
+							$scope.btnMsg=second+"秒后重发";
+							second--;
+							//强制更新视图
+							$scope.$digest();
+						}
+					},1000);
+				};
+				
+				
+				
+			}]);
+			
+			
+		</script>
 	</body>
 </html>
