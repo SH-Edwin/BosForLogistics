@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 import cn.itcast.bosfore.utils.MailUtil;
-import cn.itcast.bosfore.utils.SmsUtils;
 import cn.itcast.crm.domain.Customer;
 
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {

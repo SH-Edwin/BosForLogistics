@@ -79,4 +79,9 @@
 	<!-- 整合spring data jpa -->
 	<jpa:repositories base-package="cn.itcast.bos.dao" />
 	
+	<!-- 引入 webSerive配置文件 -->
+	<import resource="applicationContext-webService.xml"/>
+	
+	<import resource="applicationContext-quartz.xml"/>
+	
 </beans>

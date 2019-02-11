@@ -10,7 +10,7 @@ bosfore_app.controller("ctrlRead", ['$scope', '$http', function($scope, $http) {
 		}
 	}
 
-	$scope.next = function() {
+	$scope.next = function() { 
 		if($scope.currentPage < $scope.totalPages) {
 			$scope.selectPage($scope.currentPage + 1);
 		}
@@ -24,10 +24,10 @@ bosfore_app.controller("ctrlRead", ['$scope', '$http', function($scope, $http) {
 
 		$http({
 			method: 'GET',
-			url: 'data/promotion' + page + '.json',
+			url: 'promotion_pageQuery.action',
 			params: {
 				"page": page,
-				"pageSize": $scope.pageSize
+				"rows": $scope.pageSize
 			}
 		}).success(function(data, status, headers, config) {
 			// 显示表格数据 

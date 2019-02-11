@@ -1,4 +1,4 @@
-﻿package cn.itcast.bosfore.utils;
+package cn.itcast.bosfore.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
