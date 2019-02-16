@@ -17,9 +17,8 @@ public class SmsConsumer implements MessageListener{
 		MapMessage mapMessage=(MapMessage) message;
 		
 		try {
-				// 发送短信
-			 /*String sendSmsByHTTPReturn = SmsUtils.sendSmsByHTTP(mapMessage.getString("telephone"),
-					  mapMessage.getString("content")); */
+			// 发送短信
+			//String sendSmsByHTTPReturn = SmsUtils.sendSmsByHTTP(mapMessage.getString("telephone"),mapMessage.getString("content"));
 			  String sendSmsByHTTPReturn="000/xxxxx";
 			  if (sendSmsByHTTPReturn.startsWith("000")) { 
 				  //发送成功 return NONE;

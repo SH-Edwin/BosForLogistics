@@ -52,4 +52,16 @@ public interface CustomerService {
 	@PUT
 	@Consumes({"application/xml","application/json"})
 	public void active(@PathParam("telephone") String telephone);
+	
+	//用户登陆
+	@Path("/customer/login")
+	@GET
+	@Produces({"application/xml","application/json"})
+	public Customer login(@QueryParam("telephone")String telephone, @QueryParam("password")String password);
+	
+	//根据地址查询定区
+	@Path("/findFixedAreaIdByAddress")
+	@GET
+	@Produces({"application/xml","application/json"})
+	public String findFixedAreaIdByAddress(@QueryParam("address")String address);
 }

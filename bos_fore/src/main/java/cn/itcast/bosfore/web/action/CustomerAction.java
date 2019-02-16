@@ -23,6 +23,7 @@ import org.springframework.jms.core.MessageCreator;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import cn.itcast.bos.domain.constant.Constants;
 import cn.itcast.bosfore.utils.MailUtil;
 import cn.itcast.crm.domain.Customer;
 
@@ -140,4 +141,18 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 		return null;
 	}
 
+	//用户登陆
+	@Action(value="customer_login", results= {@Result(name="input", location="login.html",type="redirect"),
+			@Result(name="success",location="index.html#/myhome",type="redirect")})
+	public String login() {
+		Customer customerLogin = WebClient.create(Constants.CRM_MANAGEMENT_SERVICE+"/customer/login?telephone="+customer.getTelephone()+"&password="+customer.getPassword())
+		.accept(MediaType.APPLICATION_JSON).get(Customer.class);
+		if (customerLogin == null) {
+			return INPUT;
+		} else {
+			//登陆成功,存入客户信息
+			ServletActionContext.getRequest().getSession().setAttribute("customer", customerLogin);
+			return SUCCESS;
+		}
+	}
 }

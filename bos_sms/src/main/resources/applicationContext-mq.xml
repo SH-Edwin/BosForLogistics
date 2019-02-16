@@ -19,6 +19,9 @@
 		http://activemq.apache.org/schema/core
         http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd ">
 	
+	<!-- 扫描包 -->
+	<context:component-scan base-package="cn.itcast.bos.mq"></context:component-scan>
+	
 	<!-- ActiveMQ 连接工厂 -->
     <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->
     <!-- 如果连接网络：tcp://ip:61616；未连接网络：tcp://localhost:61616 以及用户名，密码-->
@@ -37,12 +40,9 @@
     </bean>
     
     <!-- 消息消费者 start-->
-
     <!-- 定义Queue监听器 -->
     <jms:listener-container destination-type="queue" container-type="default" connection-factory="mqConnectionFactory" acknowledge="auto">
         <jms:listener destination="bos_sms" ref="smsConsumer"/>
     </jms:listener-container>
-
-
     <!-- 消息消费者 end -->
 </beans>
