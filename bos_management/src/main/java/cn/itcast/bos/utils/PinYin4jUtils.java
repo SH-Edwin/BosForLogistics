@@ -114,6 +114,7 @@ public class PinYin4jUtils {
 	 * @param separator
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public static String hanziToPinyin(String hanzi, String separator) {
 
 		// 创建汉语拼音处理类

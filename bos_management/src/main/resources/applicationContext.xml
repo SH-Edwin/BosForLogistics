@@ -88,4 +88,7 @@
 	<!-- 引入MQ配置文件 -->
 	<import resource="applicationContext-mq.xml"/>
 	
+	<!-- 引入elasticsearch配置 -->
+	<import resource="applicationContext-elasticsearch.xml"/>
+	
 </beans>
