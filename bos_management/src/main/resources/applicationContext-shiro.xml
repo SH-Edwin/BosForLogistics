@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 	
+ 	<!-- 配置shiro过滤器 -->
+ 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+ 		<!-- 安全管理器 -->
+ 		<property name="securityManager" ref="securityManager"></property>
+ 		<!-- 未认证跳转的页面 -->
+ 		<property name="loginUrl" value="/login.html"></property>
+ 		<!-- 登陆成功跳转的页面 -->
+ 		<property name="successUrl" value="/index.html"></property>
+ 		<!-- 认证后没有权限跳转的页面 -->
+ 		<property name="unauthorizedUrl"  value="/unauthorized.html"></property>
+ 		<!-- shiro url过滤器规则 -->
+ 		<property name="filterChainDefinitions">
+ 			<value>
+ 				/login.html* = anon
+ 				/css/** = anon
+ 				/js/** = anon
+ 				/images/** = anon
+ 				/services/** = anon
+ 				/validatecode.jsp*=anon
+ 				/user_login.action*=anon
+ 				/pages/base/courier.html*=perms[courier:list]
+ 				/pages/base/area.html*=roles[base]
+ 				/** = authc
+ 			</value>
+ 		</property>
+ 	</bean>
+ 	
+ 	<!-- 配置Realm -->
+	<bean id="bosRealm" class="cn.itcast.bos.realm.BosRealm">
+		<!-- 缓存区的名字就是ehcache.xml自定义cache的name -->
+		<property name="authorizationCacheName" value="bos"></property>
+	</bean>
+ 	
+ 	<!-- 配置安全管理器 -->
+ 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+ 		<!-- 配置realm -->
+ 		<property name="realm" ref="bosRealm"></property>
+ 		<property name="cacheManager" ref="shiroCacheManager"></property>
+ 	</bean>
+ 	
+ 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+ 	
+ 	<!-- 开启shiro注解模式 -->
+ 	<bean		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"  depends-on="lifecycleBeanPostProcessor" >
+		<property name="proxyTargetClass" value="true"></property>
+	</bean>	
+	<bean		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+ 	
+</beans>
