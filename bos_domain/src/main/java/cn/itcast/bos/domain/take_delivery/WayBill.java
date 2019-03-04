@@ -8,10 +8,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import cn.itcast.bos.domain.base.Area;
 
@@ -142,7 +145,8 @@ public class WayBill {
 	public void setWayBillNum(String wayBillNum) {
 		this.wayBillNum = wayBillNum;
 	}
-
+	
+	@JsonIgnore
 	public Order getOrder() {
 		return order;
 	}
@@ -214,7 +218,8 @@ public class WayBill {
 	public void setRecCompany(String recCompany) {
 		this.recCompany = recCompany;
 	}
-
+	
+	@JsonIgnore
 	public Area getRecArea() {
 		return recArea;
 	}
@@ -334,5 +339,7 @@ public class WayBill {
 	public void setDelTag(String delTag) {
 		this.delTag = delTag;
 	}
+
+	
 
 }

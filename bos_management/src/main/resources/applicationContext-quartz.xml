@@ -8,15 +8,17 @@
 
 	<context:component-scan base-package="cn.itcast" />
 
-	<bean id="promotionJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">  
-	    <property name="jobClass" value="cn.itcast.bos.quartz.PromotionJob"/> 
+	<!-- job -->
+	<bean id="quarzJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">  
+	    <property name="jobClass" value="cn.itcast.bos.quartz.QuarzJob"/> 
 	</bean> 
 
 	<!-- ======================== 调度触发器 ======================== -->
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-		<property name="jobDetail" ref="promotionJob"></property>
+		<property name="jobDetail" ref="quarzJob"></property>
 		<property name="startDelay" value="0"></property>
-		<property name="repeatInterval" value="60000"></property>
+		<!-- 10分钟重复执行一次 -->
+		<property name="repeatInterval" value="600000"></property>
 	</bean>
 
 	<!-- ======================== 调度工厂 ======================== -->

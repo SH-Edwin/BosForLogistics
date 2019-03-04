@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.Transient;
+
 import cn.itcast.bos.domain.take_delivery.WayBill;
 
 /**
@@ -28,27 +30,26 @@ public class TransitInfo {
 
 	@OneToOne
 	@JoinColumn(name = "C_WAYBILL_ID")
-	private WayBill wayBill;
+	private WayBill wayBill;//运单
 
 	@OneToMany
 	@JoinColumn(name = "C_TRANSIT_INFO_ID")
 	@OrderColumn(name = "C_IN_OUT_INDEX")
-	private List<InOutStorageInfo> inOutStorageInfos = new ArrayList<InOutStorageInfo>();
+	private List<InOutStorageInfo> inOutStorageInfos = new ArrayList<InOutStorageInfo>();//出入库信息
 
 	@OneToOne
 	@JoinColumn(name = "C_DELIVERY_INFO_ID")
-	private DeliveryInfo deliveryInfo;
+	private DeliveryInfo deliveryInfo;//配送信息
 
 	@OneToOne
 	@JoinColumn(name = "C_SIGN_INFO_ID")
-	private SignInfo signInfo;
+	private SignInfo signInfo;//签收信息
 
 	@Column(name = "C_STATUS")
-	// 出入库中转、到达网点、开始配置、正常签收、异常
-	private String status;
+	private String status;// 运单状态: 出入库中转、到达网点、开始配送、正常签收、异常
 
 	@Column(name = "C_OUTLET_ADDRESS")
-	private String outletAddress;
+	private String outletAddress;//网点地址
 
 	public Integer getId() {
 		return id;
@@ -104,6 +105,25 @@ public class TransitInfo {
 
 	public void setOutletAddress(String outletAddress) {
 		this.outletAddress = outletAddress;
+	}
+	
+	//拼接物流信息
+	@Transient
+	public String getTransferInfo() {
+		StringBuffer buffer = new StringBuffer();
+		//出入库信息
+		for (InOutStorageInfo inOutStorageInfo : inOutStorageInfos) {
+			buffer.append(inOutStorageInfo.getDescription() + "<br />");
+		}
+		//配送信息
+		if (deliveryInfo != null) {
+			buffer.append(deliveryInfo.getDescription() + "<br/>");
+		}
+		//签收信息
+		if (signInfo != null) {
+			buffer.append(signInfo.getDescription() + "<br/>");
+		}
+		return buffer.toString();
 	}
 
 }

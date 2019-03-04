@@ -20,16 +20,16 @@ public class SignInfo {
 	private Integer id;
 
 	@Column(name = "C_SIGN_NAME")
-	private String signName;
+	private String signName;//签收人
 
 	@Column(name = "C_SIGN_TIME")
-	private Date signTime;
+	private Date signTime;//签收日期
 
 	@Column(name = "C_SIGN_TYPE")
-	private String signType;
+	private String signType;//签收状态: 正常, 返单, 转发签收
 
 	@Column(name = "C_ERROR_REMARK")
-	private String errorRemark;
+	private String errorRemark;//异常备注
 
 	@Column(name = "C_DESCRIPTION")
 	private String description; // 描述

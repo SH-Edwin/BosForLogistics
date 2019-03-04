@@ -195,5 +195,6 @@ public class AreaAction extends ActionSupport implements ModelDriven<Area>{
 		ActionContext.getContext().getValueStack().push(list);
 		return SUCCESS;
 	}
+
 	
 }
